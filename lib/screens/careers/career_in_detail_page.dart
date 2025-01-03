@@ -27,16 +27,18 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         title: Text(widget.job.position), // Title using job position
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ApplicantManagementScreen(
-                            jobId: widget.job.uid,
-                          )),
-                );
-              },
-              icon: Icon(Icons.abc_outlined))
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ApplicantManagementScreen(
+                          jobId: widget.job.uid,
+                        )),
+              );
+            },
+            icon: Icon(IconlyBroken.message),
+            tooltip: "Applicants",
+          )
         ],
       ),
       body: Stack(
@@ -85,7 +87,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                       buildColumns(
                           IconlyBold.wallet,
                           "Stipend",
-                          widget.job.pay.toString() == "0"
+                          widget.job.pay.toString() == "0.0"
                               ? "Unpaid"
                               : widget.job.pay.toString())
                     ],
@@ -120,9 +122,6 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                     height: 30,
                   ),
 
-                  SizedBox(
-                    height: 30,
-                  ),
                   // Text('Position: ${widget.job.position}',
                   //     style:
                   //         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),

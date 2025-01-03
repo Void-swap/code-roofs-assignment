@@ -238,7 +238,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         );
       }
 
-      await _audioCache.setSource(AssetSource('success2.mp3'));
+      await _audioCache.setSource(AssetSource('success.mp3'));
       _audioCache.resume();
       if (await Vibration.hasVibrator() != null) {
         Vibration.vibrate(duration: 500);

@@ -1,3 +1,4 @@
+import 'package:bloom/form.dart';
 import 'package:bloom/services/services.dart';
 import 'package:bloom/utils/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -578,63 +579,71 @@ class _CreateCareerScreenState extends State<CreateCareerScreen> {
                   );
                 },
               ),
-              Text("Selected Skills: ${selectedSkills.join(", ")}"),
-              ElevatedButton(
-                onPressed: () async {
-                  UserService userService = UserService();
-                  String userName = userService.getUserName();
-                  String userPfp = userService.getUserProfilePic();
-                  String userUID = userService.getUserUID();
+              Text("${selectedSkills.join(", ")}"),
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    UserService userService = UserService();
+                    String userName = userService.getUserName();
+                    String userPfp = userService.getUserProfilePic();
+                    String userUID = userService.getUserUID();
 
-                  if (_formKey.currentState!.validate()) {
-                    final jobData = {
-                      'uid': '',
-                      'name': userName,
-                      'pfpImageURL': userPfp,
-                      'jobType': jobType,
-                      'position': position,
-                      'responsibility': responsibility,
-                      'duration': '$duration $durationUnit',
-                      'workMode': workMode,
-                      'location': location,
-                      'startDate': startDate?.toString(),
-                      'pay': payType == "Paid"
-                          ? 'Paid: \$${payAmount?.toStringAsFixed(2)}'
-                          : 'Unpaid',
-                      'partFull': partFull,
-                      'numberOfOpenings': numberOfOpenings,
-                      'perks': perks,
-                      'skills': selectedSkills,
-                      'listingBy': userUID,
-                      'createdOn': Timestamp.now(),
-                    };
+                    if (_formKey.currentState!.validate()) {
+                      final jobData = {
+                        'uid': '',
+                        'name': userName,
+                        'pfpImageURL': userPfp,
+                        'jobType': jobType,
+                        'position': position,
+                        'responsibility': responsibility,
+                        'duration': '$duration $durationUnit',
+                        'workMode': workMode,
+                        'location': location,
+                        'startDate': startDate?.toString(),
+                        'pay': payType == "Paid"
+                            ? 'Paid: \$${payAmount?.toStringAsFixed(2)}'
+                            : 'Unpaid',
+                        'partFull': partFull,
+                        'numberOfOpenings': numberOfOpenings,
+                        'perks': perks,
+                        'skills': selectedSkills,
+                        'listingBy': userUID,
+                        'createdOn': Timestamp.now(),
+                      };
 
-                    try {
-                      DocumentReference docRef = await FirebaseFirestore
-                          .instance
-                          .collection('careers')
-                          .add(jobData);
+                      try {
+                        DocumentReference docRef = await FirebaseFirestore
+                            .instance
+                            .collection('careers')
+                            .add(jobData);
 
-                      await docRef.update({
-                        'uid': docRef.id,
-                      });
+                        await docRef.update({
+                          'uid': docRef.id,
+                        });
 
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(userUID)
-                          .update({
-                        'listingCreated': FieldValue.arrayUnion([docRef.id]),
-                      });
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(userUID)
+                            .update({
+                          'listingCreated': FieldValue.arrayUnion([docRef.id]),
+                        });
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Job created successfully!")));
-                    } catch (error) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Failed to create job: $error")));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Job created successfully!")));
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed to create job: $error")));
+                      }
                     }
-                  }
-                },
-                child: Text("Create Job"),
+                  },
+                  child: CustomButton(
+                    color: orange,
+                    name: ("Create Listing"),
+                  ),
+                ),
               ),
             ],
           ),

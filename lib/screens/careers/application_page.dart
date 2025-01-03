@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloom/form.dart';
 import 'package:bloom/model/user.dart';
+import 'package:bloom/screens/events/create_event.dart';
 import 'package:bloom/utils/colors.dart';
 import 'package:bloom/utils/reusable_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,11 +54,6 @@ class _ApplicationPageState extends State<ApplicationPage> {
   }
 
   Future<void> _applyForJob() async {
-    await _audioPlayer.setSource(AssetSource('success.mp3'));
-    _audioPlayer.resume(); // Play the sound
-    if (await Vibration.hasVibrator() != null) {
-      Vibration.vibrate(duration: 500);
-    }
     final GetStorage _box = GetStorage();
     final userDataMap = _box.read('userData') as Map<String, dynamic>?;
     final userData =
@@ -84,6 +80,11 @@ class _ApplicationPageState extends State<ApplicationPage> {
             nextPath: "/home",
           );
         }));
+        await _audioPlayer.setSource(AssetSource('success.mp3'));
+        _audioPlayer.resume(); // Play the sound
+        if (await Vibration.hasVibrator() != null) {
+          Vibration.vibrate(duration: 500);
+        }
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error: $e")));
@@ -101,7 +102,9 @@ class _ApplicationPageState extends State<ApplicationPage> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CustomHeaders(context: context, Header: "Additinal Info*"),
                 TextFormField(
                   maxLines: 9,
                   decoration: InputDecoration(
@@ -117,19 +120,43 @@ class _ApplicationPageState extends State<ApplicationPage> {
                       value!.isEmpty ? "Please enter a message" : null,
                 ),
                 SizedBox(height: 20),
-                Text(filePath != null
-                    ? "Selected File: $filePath"
-                    : "No file selected"),
-                TextButton(
-                  onPressed: _pickFile,
-                  child: Text("Choose File"),
-                ),
-                SizedBox(height: 20),
+                CustomHeaders(
+                    context: context, Header: "Resume (PDF/Word document)"),
+                const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: _applyForJob,
-                  child: CustomButton(
-                    name: "Submit application",
-                    color: orange,
+                  onTap: _pickFile,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: filePath == null
+                        ? Text(
+                            'Tap to select your resume',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          )
+                        : Text(
+                            'Selected resume: ${filePath}',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Center(
+                  child: GestureDetector(
+                    onTap: _applyForJob,
+                    child: CustomButton(
+                      name: "Submit application",
+                      color: orange,
+                    ),
                   ),
                 )
               ],

@@ -332,6 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             .textTheme
                             .bodyMedium!
                             .copyWith(fontSize: 12),
+                        maxLines: 3,
                       ),
                       const SizedBox(height: 15),
                       Text(

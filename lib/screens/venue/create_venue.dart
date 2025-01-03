@@ -57,12 +57,12 @@ class _CreateVenueScreenState extends State<CreateVenueScreen> {
   bool isAvailableSpecificDays = false;
 
   void _submit() async {
-    await _audioPlayer.setSource(AssetSource('success.mp3'));
-    _audioPlayer.resume(); // Play the sound
-    if (await Vibration.hasVibrator() != null) {
-      Vibration.vibrate(duration: 500);
-    }
     if (_validateInputs()) {
+      await _audioPlayer.setSource(AssetSource('success.mp3'));
+      _audioPlayer.resume(); // Play the sound
+      if (await Vibration.hasVibrator() != null) {
+        Vibration.vibrate(duration: 500);
+      }
       try {
         if (_images.isNotEmpty) {
           await _uploadImages();

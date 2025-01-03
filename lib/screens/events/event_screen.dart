@@ -213,7 +213,7 @@ class _EventScreenState extends State<EventScreen> {
             icon: const Icon(IconlyBroken.filter),
             onPressed: _showFilterBottomSheet,
           ),
-          if (userData!.role != "Mentor" || userData.role == "Learner")
+          if (userData.role == "Admin")
             IconButton(
               tooltip: "Event Requests",
               icon: const Icon(IconlyBroken.notification),
@@ -223,13 +223,14 @@ class _EventScreenState extends State<EventScreen> {
             ),
           if (userData!.role != "Learner" && userData.role != "Mentor")
             IconButton(
+                tooltip: "Create Venue",
                 icon: const Icon(
                   IconlyBroken.location,
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, '/createVenue');
                 }),
-          if (userData!.role == "Mentor")
+          if (userData!.role != "Learner")
             IconButton(
               tooltip: "Create Event",
               icon: const Icon(IconlyBroken.plus),

@@ -256,70 +256,78 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     final box = GetStorage();
     final userrr = box.read('userData') ?? 'User not found';
     print(userrr);
-    await _audioPlayer.setSource(AssetSource('success.mp3'));
-    _audioPlayer.resume(); // Play the sound
-    if (await Vibration.hasVibrator() != null) {
-      Vibration.vibrate(duration: 500);
-    }
+
     UserService userService = UserService();
     String userName = userService.getUserName();
     String userPfp = userService.getUserProfilePic();
     String userUID = userService.getUserUID();
-    if (_validateInputs()) {
-      if (_images.isNotEmpty) {
-        await _uploadImages();
-      }
+    String isVerified = userrr?['isVerified'] ?? 'Not Applied';
 
-      // if (_imageUrls.isNotEmpty) {
-      final eventData = EventModel(
-        UID: '',
-        organizer: userUID ?? 'No UID found',
-        name: _eventNameController.text,
-        description: _descriptionController.text,
-        date: selectedDate ?? '',
-        time: selectedTime ?? '',
-        venue: eventType == 'Virtual'
-            ? _meetingLinkController.text
-            : selectedVenue ?? '',
-        city: selectedCity ?? '',
-        reviews: [],
-        status: 'pending',
-        tags: _tagsController.text.split(',').map((tag) => tag.trim()).toList(),
-        volunteers: [],
-        attendees: [],
-        contact: '',
-        accessibilityInfo: selectedVenueAccessibility ?? '',
-        specialInstruction: '',
-        type: eventType,
-        images: _imageUrls,
-      );
+    if (isVerified == "Verified") {
+      if (_validateInputs()) {
+        if (_images.isNotEmpty) {
+          await _uploadImages();
+        }
 
-      try {
-        DocumentReference docRef = await FirebaseFirestore.instance
-            .collection('Events')
-            .add(eventData.toMap());
-        await docRef.update({'UID': docRef.id});
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event created successfully!')));
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return CustomSplash(
-            image: "assets/images/phone.svg",
-            title: " 🎉 You're event request is sent",
-            subTitle: "Thank you for joining us—exciting things are ahead!",
-            buttonName: "Next",
-            nextPath: "/home",
-          );
-        }));
-        _clearForm();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to create event: $e')));
+        // if (_imageUrls.isNotEmpty) {
+        final eventData = EventModel(
+          UID: '',
+          organizer: userUID ?? 'No UID found',
+          name: _eventNameController.text,
+          description: _descriptionController.text,
+          date: selectedDate ?? '',
+          time: selectedTime ?? '',
+          venue: eventType == 'Virtual'
+              ? _meetingLinkController.text
+              : selectedVenue ?? '',
+          city: selectedCity ?? '',
+          reviews: [],
+          status: 'pending',
+          tags:
+              _tagsController.text.split(',').map((tag) => tag.trim()).toList(),
+          volunteers: [],
+          attendees: [],
+          contact: '',
+          accessibilityInfo: selectedVenueAccessibility ?? '',
+          specialInstruction: '',
+          type: eventType,
+          images: _imageUrls,
+        );
+
+        try {
+          DocumentReference docRef = await FirebaseFirestore.instance
+              .collection('Events')
+              .add(eventData.toMap());
+          await docRef.update({'UID': docRef.id});
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Event created successfully!')));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return CustomSplash(
+              image: "assets/images/phone.svg",
+              title: " 🎉 You're event request is sent",
+              subTitle: "Thank you for joining us—exciting things are ahead!",
+              buttonName: "Next",
+              nextPath: "/home",
+            );
+          }));
+          _clearForm();
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to create event: $e')));
+        }
+        // } else {
+        //   _showError(
+        //       'Please upload at least one image before submitting the event.');
+        // }
       }
-      // } else {
-      //   _showError(
-      //       'Please upload at least one image before submitting the event.');
-      // }
+      await _audioPlayer.setSource(AssetSource('success.mp3'));
+      _audioPlayer.resume(); // Play the sound
+      if (await Vibration.hasVibrator() != null) {
+        Vibration.vibrate(duration: 500);
+      }
+    } else {
+      _showError("Uh-Oh! please get verified to create events.");
     }
   }
 

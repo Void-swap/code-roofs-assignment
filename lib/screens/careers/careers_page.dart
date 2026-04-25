@@ -3,6 +3,7 @@ import 'package:bloom/model/user.dart';
 import 'package:bloom/screens/careers/career_in_detail_page.dart';
 import 'package:bloom/screens/events/create_event.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -351,7 +352,7 @@ class CareersListingPage extends StatelessWidget {
                                             text: 'Responsibilities ',
                                             style: const TextStyle(
                                               fontSize: 15,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w700,
                                               color: Color(0xff2e2e2e),
                                             ),
                                             children: [

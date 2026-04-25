@@ -1,13 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloom/form.dart';
-import 'package:bloom/model/user.dart';
 import 'package:bloom/screens/events/create_event.dart';
+import 'package:bloom/services/services.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:bloom/utils/reusable_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:vibration/vibration.dart';
 
 class ApplicationPage extends StatefulWidget {
@@ -23,13 +23,13 @@ class _ApplicationPageState extends State<ApplicationPage> {
   final _formKey = GlobalKey<FormState>();
   String? message;
   String? filePath;
-  final AudioPlayer _audioPlayer = AudioPlayer(); // Use AudioCache for assets
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       setState(() {
-        filePath = result.files.single.path; // Store the file path
+        filePath = result.files.single.path;
       });
     }
   }
@@ -54,10 +54,13 @@ class _ApplicationPageState extends State<ApplicationPage> {
   }
 
   Future<void> _applyForJob() async {
-    final GetStorage _box = GetStorage();
-    final userDataMap = _box.read('userData') as Map<String, dynamic>?;
-    final userData =
-        userDataMap != null ? UserModel.fromMap(userDataMap) : null;
+    // final GetStorage _box = GetStorage();
+    // final userDataMap = _box.read('userData') as Map<String, dynamic>?;
+    // final userData =
+    //     userDataMap != null ? UserModel.fromMap(userDataMap) : null;
+
+    UserService userService = UserService();
+
     if (_formKey.currentState!.validate()) {
       if (message == null || message!.isEmpty) {
         ScaffoldMessenger.of(context)
@@ -66,7 +69,8 @@ class _ApplicationPageState extends State<ApplicationPage> {
       }
       try {
         print("Applying for job with ID: ${widget.jobId}");
-        await applyForJob(widget.jobId, userData!.uid, message!, filePath);
+        await applyForJob(
+            widget.jobId, userService.getUserUID(), message!, filePath);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Application submitted!")));
         Navigator.pushReplacement(context,

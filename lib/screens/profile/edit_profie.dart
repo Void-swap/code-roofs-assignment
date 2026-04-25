@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloom/model/user.dart';
+import 'package:bloom/register_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -109,7 +111,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      // Update the interests controller with selected interests
                       _interestsController.text = selectedInterests.join(', ');
                     });
                     Navigator.of(context).pop();
@@ -149,12 +150,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<String> generateFeedbackWithAI(String inputText) async {
-    const String apiKey =
-        'AIzaSyDT_p6t2MjZhrfNocqQri2ovGPeqrV_n08'; // Replace with your actual API key
+    const String apiKey = 'AIzaSyDT_p6t2MjZhrfNocqQri2ovGPeqrV_n08';
     const String apiUrl =
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 
-    // Specific prompt structure
     String modifiedInput =
         "Elaborate on the following statement with enthusiasm, using an active voice and an assertive tone: '$inputText'. Avoid adding any extra text or questions.";
 
@@ -177,10 +176,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
-      // Debugging: Check the entire response body
       print('Decoded response: $responseBody');
 
-      // Extract the relevant text from the response
       if (responseBody.containsKey('candidates') &&
           responseBody['candidates'].isNotEmpty &&
           responseBody['candidates'][0].containsKey('content') &&
@@ -196,11 +193,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   // Future<String> generateFeedbackWithAI(String inputText) async {
-  //   // Specific prompt structure
+
   //   String modifiedInput =
   //       "Elaborate on the following statement with enthusiasm, using an active voice and an assertive tone: '$inputText'. Avoid adding any extra text or questions.";
 
-  //   // Groq client API interaction
   //   final String groqApiUrl =
   //       'https://api.groq.com/openai/v1/chat/completions'; // Assume this is the correct endpoint
 
@@ -231,10 +227,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   //   if (response.statusCode == 200) {
   //     final responseBody = jsonDecode(response.body);
-  //     // Debugging: Check the entire response body
   //     print('Decoded response: $responseBody');
 
-  //     // Extract the relevant text from the response
   //     if (responseBody.containsKey('choices') &&
   //         responseBody['choices'].isNotEmpty &&
   //         responseBody['choices'][0].containsKey('message') &&
@@ -269,7 +263,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _image = pickedFile;
       });
 
-      // Upload image to Firebase Storage
       final file = File(_image!.path);
       final storageRef = FirebaseStorage.instance
           .ref()
@@ -279,8 +272,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         contentType: 'image/jpeg',
         cacheControl: 'max-age=3600',
       );
-
-      // Upload file with metadata
 
       final uploadTask = await storageRef.putFile(File(file.path), metadata);
 
@@ -342,11 +333,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
 
     try {
-      // Save updated data to GetStorage
       final box = GetStorage();
       box.write('userData', updatedUserData.toMap());
 
-      // Update Firestore
       final userDoc = FirebaseFirestore.instance
           .collection('users')
           .doc(updatedUserData.uid);
@@ -359,7 +348,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       );
 
-      // Optionally, pop the screen or navigate to another screen
       Navigator.pop(context);
     } catch (e) {
       print('Failed to update profile: $e');
@@ -379,6 +367,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text('Edit Profile'),
         actions: [
           IconButton(
+            icon: const Icon(
+              IconlyBroken.logout,
+            ),
+            onPressed: () {
+              final GetStorage box = GetStorage();
+              box.erase();
+              FirebaseAuth.instance.signOut();
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterLogin()),
+              );
+            },
+          ),
+          IconButton(
             tooltip: "Save",
             icon: Icon(IconlyBroken.tick_square),
             onPressed: _saveProfile,
@@ -397,7 +400,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Shimmer effect while loading
                       if (_profilePicUrl == null || _profilePicUrl!.isEmpty)
                         Shimmer.fromColors(
                           baseColor: Colors.grey[500]!,
@@ -463,7 +465,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     labelText: 'Name', prefixIcon: Icon(IconlyBold.profile)),
               ),
               SizedBox(height: 20),
-
               TextField(
                 controller: _description,
                 maxLines: 4,
@@ -484,7 +485,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               SizedBox(height: 20),
-
               TextField(
                 controller: _addressController,
                 decoration: InputDecoration(
@@ -492,14 +492,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     prefixIcon: Icon(IconlyBold.location)),
               ),
               SizedBox(height: 20),
-
               TextField(
                 controller: _contactsController,
                 decoration: InputDecoration(
                     labelText: 'Contacts', prefixIcon: Icon(IconlyBold.call)),
               ),
               SizedBox(height: 20),
-
               TextField(
                 readOnly: true,
                 controller: _emailController,
@@ -507,7 +505,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     labelText: 'Email', prefixIcon: Icon(IconlyBold.message)),
               ),
               SizedBox(height: 20),
-
               TextField(
                 controller: _socialMediaLinksController,
                 decoration: InputDecoration(
@@ -515,7 +512,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     prefixIcon: Icon(IconlyBold.chat)),
               ),
               SizedBox(height: 20),
-
               GestureDetector(
                 onTap: _showInterestsDialog,
                 child: AbsorbPointer(
@@ -528,7 +524,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-              // Add more fields as needed
             ],
           ),
         ),

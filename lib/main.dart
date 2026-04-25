@@ -34,13 +34,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Bloom',
       theme: ThemeData(
         primaryColor: const Color(0xFFF78104),
         secondaryHeaderColor: const Color(0xFF9262BF),
-        hintColor: const Color(0xFF20706B), // Background Color
-        scaffoldBackgroundColor: primaryWhite, // Scaffold Background
-        cardColor: const Color(0xFFFFFFFF), // Card Color
+        hintColor: const Color(0xFF20706B),
+        scaffoldBackgroundColor: primaryWhite,
+        cardColor: const Color(0xFFFFFFFF),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: const Color(0xFFf2f2f2),
           filled: true,
@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
             color: primaryBlack,
           ),
           prefixIconConstraints: const BoxConstraints(
-            minWidth: 40, // Adjust as needed
-            minHeight: 40, // Adjust as needed
+            minWidth: 40,
+            minHeight: 40,
           ),
           suffixIconColor: primaryBlack,
         ),
@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: primaryBlack,
               fontSize: 24,
-              fontFamily: "poppins"),
+              fontFamily: "Poppins"),
         ),
         snackBarTheme: const SnackBarThemeData(
           backgroundColor: orange,

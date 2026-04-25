@@ -1,5 +1,6 @@
 // user_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_storage/get_storage.dart';
 
 class UserService {
@@ -14,11 +15,11 @@ class UserService {
       if (userDoc.exists) {
         return userDoc.data() as Map<String, dynamic>?;
       } else {
-        return null; // User not found
+        return null;
       }
     } catch (e) {
       print('Error fetching user info: $e');
-      return null; // Handle error appropriately
+      return null;
     }
   }
 
@@ -43,4 +44,9 @@ class UserService {
     final userData = getUserData();
     return userData?['uid'] ?? 'No UID';
   }
+}
+
+Future<String> getWebImageUrl(String gsPath) async {
+  final ref = FirebaseStorage.instance.ref().child(gsPath);
+  return await ref.getDownloadURL(); // gives you https link
 }

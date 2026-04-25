@@ -5,6 +5,7 @@ import 'package:bloom/screens/events/create_event.dart';
 import 'package:bloom/screens/events/event_screen.dart';
 import 'package:bloom/screens/events/verify_event_detail.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:bloom/utils/reusable_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -36,18 +37,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     _fetchUserData();
   }
 
-  // Fetch user data from local storage
   void _fetchUserData() {
     final userDataMap = _box.read('userData') as Map<String, dynamic>?;
     if (userDataMap != null) {
       setState(() {
         userData = UserModel.fromMap(userDataMap);
-        _checkIfApplied(); // Check if the user has already applied to the event
+        _checkIfApplied(); // if the user has already applied
       });
     }
   }
 
-  // Check if the current user is in the attendees list
+  // if the current user is in the attendees list
   Future<void> _checkIfApplied() async {
     final eventDocRef = FirebaseFirestore.instance
         .collection('Events')
@@ -55,8 +55,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
     if (userData!.role == "Learner") {
       final eventSnapshot = await eventDocRef.get();
-      final attendees = List.from(eventSnapshot.data()?['attendees'] ??
-          []); // Check if the user is already in the attendees list
+      final attendees = List.from(eventSnapshot.data()?['attendees'] ?? []);
       setState(() {
         isApplied =
             attendees.any((attendee) => attendee['userId'] == userData!.uid);

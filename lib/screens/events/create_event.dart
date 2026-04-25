@@ -7,6 +7,7 @@ import 'package:bloom/model/venue.dart';
 import 'package:bloom/screens/venue/venue_detail.dart';
 import 'package:bloom/services/services.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:bloom/utils/random_colors.dart';
 import 'package:bloom/utils/reusable_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -322,7 +323,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         // }
       }
       await _audioPlayer.setSource(AssetSource('success.mp3'));
-      _audioPlayer.resume(); // Play the sound
+      _audioPlayer.resume();
       if (await Vibration.hasVibrator() != null) {
         Vibration.vibrate(duration: 500);
       }
@@ -532,17 +533,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   //   }
   // }
 
-// // Function to generate feedback using LLaMA from Hugging Face
 //   Future<String> generateFeedbackWithLlama(String inputText) async {
-//     const String apiKey = 'YOUR_NEW_TOKEN'; // Replace with your new API key
+//     const String apiKey = 'YOUR_NEW_TOKEN';
 //     const String apiUrl =
-//         'https://api-inference.huggingface.co/models/distilgpt2'; // Using DistilGPT-2 model
+//         'https://api-inference.huggingface.co/models/distilgpt2';
 
-//     // Construct the input prompt
 //     String modifiedInput =
 //         "Elaborate on the following statement with enthusiasm: '$inputText'.";
 
-//     // Make the API call
 //     final response = await http.post(
 //       Uri.parse(apiUrl),
 //       headers: {
@@ -551,11 +549,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 //       },
 //       body: jsonEncode({
 //         'inputs': modifiedInput,
-//         'options': {'use_cache': false}, // Optional settings
+//         'options': {'use_cache': false},
 //       }),
 //     );
 
-//     // Log response status and body
 //     print('Response status: ${response.statusCode}');
 //     print('Response body: ${response.body}');
 
@@ -572,10 +569,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 //     }
 //   }
 
-// // Example function to call generateFeedbackWithLlama
 //   Future<void> _generateDescription() async {
 //     String inputText = _descriptionController.text
-//         .trim(); // Assuming _descriptionController is defined
+//         .trim();
 //     if (inputText.isNotEmpty) {
 //       try {
 //         String generatedText = await generateFeedbackWithLlama(inputText);
@@ -796,7 +792,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             CustomHeaders(Header: "Event Description*", context: context),
             TextField(
               controller: _descriptionController,
-              maxLines: 4, // Make the text field larger
+              maxLines: 4,
               decoration: InputDecoration(
                 prefixIcon: const Icon(IconlyBold.star),
                 hintText: 'Give a quick overview of your event\n\n',
@@ -826,8 +822,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   onChanged: (value) {
                     setState(() {
                       eventType = value!;
-                      _meetingLinkController
-                          .clear(); // Clear meeting link if switching to In person
+                      _meetingLinkController.clear();
                     });
                   },
                 ),
@@ -955,13 +950,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                           },
                                         ),
                                       ),
-
-                                    // Foreground content
                                     Container(
                                       width: double.maxFinite,
                                       decoration: const BoxDecoration(
-                                        color: Colors
-                                            .black54, // Semi-transparent overlay
+                                        color: Colors.black54,
                                       ),
                                       padding: const EdgeInsets.all(16.0),
                                       // filter: ImageFilter.blur(
@@ -1456,36 +1448,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           _buildImageUpload(),
         ],
       ),
-    );
-  }
-}
-
-class CustomHeaders extends StatelessWidget {
-  String Header;
-  CustomHeaders({
-    super.key,
-    required this.context,
-    required this.Header,
-  });
-
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          Header,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: 16,
-                height: (20 / 16),
-                fontWeight: FontWeight.w700,
-              ),
-        ),
-        const SizedBox(
-          height: 10,
-        )
-      ],
     );
   }
 }

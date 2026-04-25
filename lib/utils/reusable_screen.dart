@@ -51,7 +51,7 @@ class _CustomSplashState extends State<CustomSplash> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: primaryBlack,
-                      fontFamily: "poppins",
+                      fontFamily: "Poppins",
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
                       decoration: TextDecoration.none),
@@ -62,7 +62,7 @@ class _CustomSplashState extends State<CustomSplash> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: primaryBlack,
-                        fontFamily: "poppins",
+                        fontFamily: "Poppins",
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.none),
@@ -74,7 +74,7 @@ class _CustomSplashState extends State<CustomSplash> {
                       Text(
                         widget.subTitle!,
                         style: TextStyle(
-                            fontFamily: "poppins",
+                            fontFamily: "Poppins",
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: primaryBlack,
@@ -83,7 +83,7 @@ class _CustomSplashState extends State<CustomSplash> {
                       Text(
                         widget.subTitle2!,
                         style: TextStyle(
-                            fontFamily: "poppins",
+                            fontFamily: "Poppins",
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: orange,

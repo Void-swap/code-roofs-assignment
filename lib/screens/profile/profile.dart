@@ -1,9 +1,11 @@
 import 'package:bloom/model/user.dart';
+import 'package:bloom/register_login.dart';
 import 'package:bloom/screens/admin/admin.dart';
 import 'package:bloom/screens/profile/edit_profie.dart';
 import 'package:bloom/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconly/iconly.dart';
@@ -98,20 +100,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
             ),
-          if (userData!.role == "Admin")
-            IconButton(
-              icon: const Icon(
-                IconlyBroken.chart,
-              ),
-              onPressed: () {
-                if (userData != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AdminDashboard()),
-                  );
-                }
-              },
+          // if (userData!.role == "Admin")
+          IconButton(
+            icon: const Icon(
+              IconlyBroken.chart,
             ),
+            onPressed: () {
+              if (userData != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminDashboard()),
+                );
+              }
+            },
+          ),
           // IconButton(
           //   icon: const Icon(
           //     IconlyBroken.swap,
@@ -402,9 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         onTap: () {
                           if (userData.socialMediaLinks.isNotEmpty) {
-                            final url = userData.socialMediaLinks[
-                                0]; // Assuming the URL is stored in the badges list
-                            // Launch the URL
+                            final url = userData.socialMediaLinks[0];
                             _launchURL(url);
                           }
                         },

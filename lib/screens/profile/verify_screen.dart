@@ -26,9 +26,9 @@ class _GetVerifiedScreenState extends State<GetVerifiedScreen> {
   String? _pastExperience;
   PlatformFile? _cvFile;
   late String _uid;
-  final _box = GetStorage(); // Initialize GetStorage
+  final _box = GetStorage();
   UserModel? userData;
-  final AudioPlayer _audioPlayer = AudioPlayer(); // Use AudioCache for assets
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -39,8 +39,7 @@ class _GetVerifiedScreenState extends State<GetVerifiedScreen> {
 
     userData = userDataMap != null ? UserModel.fromMap(userDataMap) : null;
 
-    _uid = userData?.uid ??
-        'user@example.com'; // Use email from userData or default
+    _uid = userData?.uid ?? 'user@example.com';
   }
 
   Future<void> _pickCV() async {
@@ -96,7 +95,6 @@ class _GetVerifiedScreenState extends State<GetVerifiedScreen> {
         final box = GetStorage();
         final uid = _uid;
 
-        // Add verification request to Firestore
         await verificationCollection.add({
           'uid': uid,
           'motivation': _motivation,
@@ -106,7 +104,6 @@ class _GetVerifiedScreenState extends State<GetVerifiedScreen> {
           'status': 'pending'
         });
 
-        // Update user's verification status in Firestore
         final usersCollection = firestore.collection('users');
         final userDoc = usersCollection.doc(uid);
 

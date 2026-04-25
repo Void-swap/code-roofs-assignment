@@ -1,7 +1,7 @@
 import 'package:bloom/model/user.dart';
 import 'package:bloom/screens/events/event_detail_screen.dart';
 import 'package:bloom/utils/colors.dart';
-import 'package:bloom/utils/random_colors.dart'; // Import your UserModel
+import 'package:bloom/utils/random_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -25,7 +25,6 @@ class _MyEventsHorizontalState extends State<MyEventsHorizontal> {
     _fetchUserData();
   }
 
-  // Fetch user data from local storage
   void _fetchUserData() {
     final userDataMap = _box.read('userData') as Map<String, dynamic>?;
 
@@ -43,25 +42,22 @@ class _MyEventsHorizontalState extends State<MyEventsHorizontal> {
       final eventsSnapshot =
           await FirebaseFirestore.instance.collection('Events').get();
 
-      // Assuming userData.interests is a List<String> of user interests
       final userInterests = userData?.interests ?? [];
 
       for (var event in eventsSnapshot.docs) {
         final eventData = event.data() as Map<String, dynamic>;
         final eventTags = List<String>.from(eventData['tags'] ?? []);
 
-        // Check if any user interest is in the event tags
         if (eventTags.any((tag) => userInterests.contains(tag))) {
           volunteerEvents.add(eventData);
         }
       }
-      setState(() {}); // Update UI after fetching events
+      setState(() {});
     } catch (e) {
       print('Error fetching volunteer events: $e');
     }
   }
 
-  // Format date
   String formatDate(String dateStr) {
     try {
       final dateTime = DateTime.parse(dateStr);
@@ -117,7 +113,6 @@ class _MyEventsHorizontalState extends State<MyEventsHorizontal> {
                                     },
                                   ),
                                 ),
-                              // Foreground content
                               Container(
                                 width: double.maxFinite,
                                 decoration: const BoxDecoration(

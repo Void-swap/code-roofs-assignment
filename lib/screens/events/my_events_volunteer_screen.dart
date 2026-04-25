@@ -1,7 +1,7 @@
 import 'package:bloom/model/user.dart';
 import 'package:bloom/screens/events/event_detail_screen.dart';
 import 'package:bloom/utils/colors.dart';
-import 'package:bloom/utils/random_colors.dart'; // Import your UserModel
+import 'package:bloom/utils/random_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -165,8 +165,7 @@ class _MyEventScreenState extends State<MyEventScreen> {
                                 Container(
                                   width: double.maxFinite,
                                   decoration: const BoxDecoration(
-                                    color: Colors
-                                        .black54, // Semi-transparent overlay
+                                    color: Colors.black54,
                                   ),
                                   padding: const EdgeInsets.all(16.0),
                                   // filter: ImageFilter.blur(
@@ -391,8 +390,7 @@ class _MyEventScreenState extends State<MyEventScreen> {
                                 Container(
                                   width: double.maxFinite,
                                   decoration: const BoxDecoration(
-                                    color: Colors
-                                        .black54, // Semi-transparent overlay
+                                    color: Colors.black54,
                                   ),
                                   padding: const EdgeInsets.all(16.0),
                                   // filter: ImageFilter.blur(

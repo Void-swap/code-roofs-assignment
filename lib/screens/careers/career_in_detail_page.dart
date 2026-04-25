@@ -4,6 +4,7 @@ import 'package:bloom/screens/careers/application_page.dart';
 import 'package:bloom/screens/careers/shortListingScreen.dart';
 import 'package:bloom/screens/events/create_event.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
@@ -24,7 +25,8 @@ class _JobDetailScreenState extends State<JobDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.job.position), // Title using job position
+        title: Text(
+            "${widget.job.position} at ${widget.job.name}"), // Title using job position
         actions: [
           IconButton(
             onPressed: () {
@@ -80,16 +82,12 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildColumns(
-                          IconlyBold.work, "Job type", widget.job.fullOrPart),
+                      buildColumns(IconlyBold.work, "Job type",
+                          widget.job.type.toString()),
                       buildColumns(IconlyBold.profile, "Job Position",
                           widget.job.position),
-                      buildColumns(
-                          IconlyBold.wallet,
-                          "Stipend",
-                          widget.job.pay.toString() == "0.0"
-                              ? "Unpaid"
-                              : widget.job.pay.toString())
+                      buildColumns(IconlyBold.wallet, "Stipend",
+                          "₹" + widget.job.pay.toString() + "/-")
                     ],
                   ),
                   const SizedBox(
@@ -271,11 +269,10 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               ),
             ),
             Text(
-              value,
+              truncateWithEllipsis(value, maxChars),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: const TextStyle(
-                //
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff666666),

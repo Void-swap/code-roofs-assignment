@@ -139,7 +139,6 @@ class _EventScreenState extends State<EventScreen> {
                             children: allTags.map((tag) {
                               return GestureDetector(
                                 onTap: () {
-                                  // Update the ValueNotifier directly
                                   if (selectedTagsList.contains(tag)) {
                                     selectedTagsList.remove(tag);
                                   } else {
@@ -294,6 +293,18 @@ class _EventScreenState extends State<EventScreen> {
                                     return Image.network(
                                       event['images'][imgIndex],
                                       fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, progress) {
+                                        if (progress == null) return child;
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Center(
+                                            child: Icon(Icons.broken_image,
+                                                size: 50));
+                                      },
                                     );
                                   },
                                 ),

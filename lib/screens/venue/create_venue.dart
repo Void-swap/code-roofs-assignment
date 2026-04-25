@@ -6,6 +6,7 @@ import 'package:bloom/screens/events/create_event.dart';
 import 'package:bloom/screens/events/event_screen.dart';
 import 'package:bloom/services/services.dart';
 import 'package:bloom/utils/colors.dart';
+import 'package:bloom/utils/custom_headers.dart';
 import 'package:bloom/utils/reusable_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';

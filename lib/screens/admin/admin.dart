@@ -57,63 +57,60 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   Future<void> analyzeRoles(List<Map<String, dynamic>> users,
       {int retries = 3}) async {
-    final String groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+    const String apiUrl =
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+    const String apiKey = 'AIzaSyDT_p6t2MjZhrfNocqQri2ovGPeqrV_n08';
 
-    final bodyData = {
-      'model': 'llama-3.1-70b-versatile',
-      'messages': [
-        {
-          'role': 'user',
-          'content':
-              "Based on the following user data, provide only the role percentages in this format: Role1: X%, Role2: Y%, ... without any additional text.\n\nUser data: ${json.encode(users)}"
-        }
-      ],
-      'temperature': 0,
-      'max_tokens': 1024,
-      'top_p': 1,
-      'stream': false,
-    };
+    String prompt =
+        "Based on the following user data, provide only the role percentages in this format: Role1: X%, Role2: Y%, ... without any additional text.\n\nUser data: ${json.encode(users)}";
 
     while (retries > 0) {
       final response = await http.post(
-        Uri.parse(groqApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer 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',
-        },
-        body: json.encode(bodyData),
+        Uri.parse('$apiUrl?key=$apiKey'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'contents': [
+            {
+              'parts': [
+                {'text': prompt}
+              ]
+            }
+          ]
+        }),
       );
 
       if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        final content =
-            responseBody['choices'][0]['message']['content'] as String;
+        final responseBody = jsonDecode(response.body);
+        final text =
+            responseBody['candidates']?[0]?['content']?['parts']?[0]?['text'];
 
-        final percentages = _extractPercentages(content);
-
-        if (percentages.isNotEmpty) {
-          setState(() {
-            rolesData = percentages;
-          });
-        } else {
-          print("No valid percentages found.");
+        if (text != null) {
+          final percentages = _extractPercentages(text);
+          if (percentages.isNotEmpty) {
+            setState(() {
+              rolesData = percentages;
+            });
+          } else {
+            print("No valid percentages found.");
+          }
+          return;
         }
-        return; // Exit if successful
       } else {
         print("Error: ${response.body}");
         retries--;
         if (retries == 0) {
-          // Handle final failure if needed
+          print("Final failure after retries.");
         }
-        await Future.delayed(Duration(seconds: 2)); // Wait before retrying
+        await Future.delayed(const Duration(seconds: 2));
       }
     }
   }
 
   Future<void> analyzeInterests(List<Map<String, dynamic>> users,
       {int retries = 3}) async {
-    final String groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+    const String apiUrl =
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+    const String apiKey = 'AIzaSyDT_p6t2MjZhrfNocqQri2ovGPeqrV_n08';
 
     List<String> interestsList = [];
     for (var user in users) {
@@ -126,69 +123,61 @@ class _AdminDashboardState extends State<AdminDashboard> {
       }
     }
 
-    print("Extracted interests: $interestsList");
-
     if (interestsList.isEmpty) {
       print("No valid interests found.");
       return;
     }
 
-    String interestsDataString = interestsList.join(', ');
-    print("Interests data sent to API: $interestsDataString");
-
-    final bodyData = {
-      'model': 'llama-3.1-70b-versatile',
-      'messages': [
-        {
-          'role': 'user',
-          'content':
-              "Based on the following list of interests: [$interestsDataString], please provide only the interest percentages in this format: Interest1: X%, Interest2: Y%, ... without any additional text."
-        }
-      ],
-      'temperature': 0,
-      'max_tokens': 1024,
-      'top_p': 1,
-      'stream': false,
-    };
+    String prompt =
+        "Based on the following list of interests: [${interestsList.join(', ')}], please provide only the interest percentages in this format: Interest1: X%, Interest2: Y%, ... without any additional text.";
 
     while (retries > 0) {
       final response = await http.post(
-        Uri.parse(groqApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer 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',
-        },
-        body: json.encode(bodyData),
+        Uri.parse('$apiUrl?key=$apiKey'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'contents': [
+            {
+              'parts': [
+                {'text': prompt}
+              ]
+            }
+          ]
+        }),
       );
 
       if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        final content =
-            responseBody['choices'][0]['message']['content'] as String;
+        final responseBody = jsonDecode(response.body);
+        final text =
+            responseBody['candidates']?[0]?['content']?['parts']?[0]?['text'];
 
-        final percentages = _extractPercentages(content);
-
-        if (percentages.isNotEmpty) {
-          setState(() {
-            interestsData = percentages;
-          });
-        } else {
-          print("No valid percentages found for interests.");
+        if (text != null) {
+          final percentages = _extractPercentages(text);
+          if (percentages.isNotEmpty) {
+            setState(() {
+              interestsData = percentages;
+            });
+          } else {
+            print("No valid percentages found for interests.");
+          }
+          return;
         }
-        return;
       } else {
         print("Error: ${response.body}");
         retries--;
-        if (retries == 0) {}
-        await Future.delayed(Duration(seconds: 2));
+        if (retries == 0) {
+          print("Final failure after retries.");
+        }
+        await Future.delayed(const Duration(seconds: 2));
       }
     }
   }
 
   Future<void> analyzeCareers(List<Map<String, dynamic>> careers,
       {int retries = 3}) async {
-    final String groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+    const String apiUrl =
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+    const String apiKey = 'AIzaSyDT_p6t2MjZhrfNocqQri2ovGPeqrV_n08';
 
     List<String> skillsList = [];
     for (var career in careers) {
@@ -196,69 +185,57 @@ class _AdminDashboardState extends State<AdminDashboard> {
         for (var skill in career['skills']) {
           if (skill is String && skill.isNotEmpty) {
             skillsList.add(skill);
-          } else {
-            print("Invalid skill entry: $skill");
           }
         }
       }
     }
-
-    print("Extracted skills: $skillsList");
 
     if (skillsList.isEmpty) {
       print("No valid skills found.");
       return;
     }
 
-    String skillsDataString = skillsList.join(', ');
-    print("Skills data sent to API: $skillsDataString");
-
-    final bodyData = {
-      'model': 'llama-3.1-70b-versatile',
-      'messages': [
-        {
-          'role': 'user',
-          'content':
-              "Based on the following list of skills: [$skillsDataString], please provide only the skill percentages in this format: Skill1: X%, Skill2: Y%, ... without any additional text."
-        }
-      ],
-      'temperature': 0,
-      'max_tokens': 1024,
-      'top_p': 1,
-      'stream': false,
-    };
+    String prompt =
+        "Based on the following list of skills: [${skillsList.join(', ')}], please provide only the skill percentages in this format: Skill1: X%, Skill2: Y%, ... without any additional text.";
 
     while (retries > 0) {
       final response = await http.post(
-        Uri.parse(groqApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer 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',
-        },
-        body: json.encode(bodyData),
+        Uri.parse('$apiUrl?key=$apiKey'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'contents': [
+            {
+              'parts': [
+                {'text': prompt}
+              ]
+            }
+          ]
+        }),
       );
 
       if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        final content =
-            responseBody['choices'][0]['message']['content'] as String;
+        final responseBody = jsonDecode(response.body);
+        final text =
+            responseBody['candidates']?[0]?['content']?['parts']?[0]?['text'];
 
-        final percentages = _extractPercentages(content);
-
-        if (percentages.isNotEmpty) {
-          setState(() {
-            skillsData = percentages;
-          });
-        } else {
-          print("No valid percentages found for skills.");
+        if (text != null) {
+          final percentages = _extractPercentages(text);
+          if (percentages.isNotEmpty) {
+            setState(() {
+              skillsData = percentages;
+            });
+          } else {
+            print("No valid percentages found for skills.");
+          }
+          return;
         }
-        return;
       } else {
         print("Error: ${response.body}");
         retries--;
-        if (retries == 0) {}
-        await Future.delayed(Duration(seconds: 2));
+        if (retries == 0) {
+          print("Final failure after retries.");
+        }
+        await Future.delayed(const Duration(seconds: 2));
       }
     }
   }

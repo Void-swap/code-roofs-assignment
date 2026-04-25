@@ -84,9 +84,7 @@ class OthersProfileView extends StatelessWidget {
                             .textTheme
                             .bodyMedium!
                             .copyWith(fontWeight: FontWeight.w600)),
-                    Expanded(child: SizedBox()
-                        // MyEventsHorizontal()
-                        ),
+                    Expanded(child: SizedBox()),
                     const SizedBox(height: 20),
                     Text("My Badges",
                         style: Theme.of(context)

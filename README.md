@@ -1,6 +1,6 @@
 # Bloom
 
-> Bridging the ducational gap by utilizing unused spaces for skill building events.
+> Bridging the educational gap by utilizing unused spaces for skill building events.
 
 ---
 

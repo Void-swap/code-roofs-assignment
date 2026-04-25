@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 Problem
+## Problem
 
 - Institutional/corporate spaces go unused during weekends and festive times
 - Students wants to give back to community via **social initiatives** (sometimes due to academic requirement)
@@ -12,7 +12,7 @@
 
 ---
 
-## 💡 Solution
+## Solution
 
 A platform where:
 
@@ -22,7 +22,7 @@ A platform where:
 
 ---
 
-## 🔄 Workflow
+## Workflow
 
 ### 👨‍🏫 Mentor
 
@@ -45,7 +45,7 @@ A platform where:
 
 ---
 
-## ✨ Features
+## Features
 
 - Authentication
 - Venue Listing
@@ -74,6 +74,6 @@ A platform where:
 
 ---
 
-## 🌐 Live
+## Live
 
 > [Hosted Link](https://blooom.web.app/)
